@@ -28,7 +28,7 @@ class Sorter
         
     private:
     
-    vector<int> *workingItemCollection;
+    vector<int> workingItemCollection;
     vector<int> *masterItemCollection;
     
     int numberOfItems;
@@ -55,7 +55,6 @@ Sorter::Sorter(vector<int> *givenMasterItemCollection, int givenNumberOfItems, i
     
     // Initialize variables
     this->indexLocation = 0;
-    this->workingItemCollection = NULL;
 }
 
 // Calculate positions
@@ -78,20 +77,102 @@ void Sorter::calculatePositions()
 int Sorter::getItem()
 {
     // Get an item at the given index location
-    return this->workingItemCollection[this->indexLocation];
+    try
+    {
+        return this->workingItemCollection.at(this->indexLocation);
+    }
+    catch (int e)
+    {
+        return 9999;
+    }
+    
+}
+
+// Set index location
+void Sorter::incrementIndex()
+{
+    this->indexLocation++;
+}
+
+void Sorter::run()
+{
+    // Calculate beginning and ending positions
+    this->calculatePositions();
+    
+    // For each - using beginning and ending positions
+    for (int iteratorIndex = this->beginningPosition; iteratorIndex <= this->endingPosition; iteratorIndex++)
+    {
+        // Copy to temporary local array
+        this->workingItemCollection.push_back(this->masterItemCollection->at(iteratorIndex));
+    }
+    
+    // Sort working item collection
+    sort(this->workingItemCollection);
+}
+
+// Generate random numbers
+void generateIntegers(int givenCollectionSize)
+{
     
 }
 
 
 int main(int argc, const char * argv[])
 {
-    vector<int> *masterItemCollection = NULL;
+    // Variables
+    vector<int> masterItemCollection;
 
-    // Forward declarations
-    void generateIntegers(int givenCollectionSize);
+    int collectionSize = 0;
+    int numberOfThreads = 0;
+    int lowerstNumber = 0;
+    bool notSorted = true;
+    
+    vector<int> sortedItemList;
+    vector<Sorter> sorterList;
     
     
+    // Get command line parameters
+    if (argc != 2)
+    {
+    	collectionSize = atoi(argv[1]);
+    	numberOfThreads = atoi(argv[2]);
+    }
+    else
+    {
+    	cout << "USAGE: arg1: collection size, arg2: number of threads\n";
+	return 0;
+    }
 
+    // Generate random numbers in the master item collection
+    generateIntegers(collectionSize);
+
+    // Debug
+    cout << "Unsorted list: \n";
+
+    for (masterItemCollection.begin(), masterItemCollection.end())
+    {
+        cout << "lala";
+    }
+    
+    
+    // THREADING
+
+    // Merge individual items into a giant sorted list
+    while (notSorted)
+    {
+    	// Reset lowest number
+    	lowerstNumber = 9999;
+
+    	// For each list
+    	for (vector<Sorter>::iterator currentSorter = sorterList.begin(); currentSorter < sorterList.end(); currentSorter++)
+    	{
+    		// Is item from list a lower number than the current lowest number
+    		if (currentSorter.getItem() < lowerstNumber)
+    		{
+    			lowerstNumber = currentSorter.getItem();
+    		}
+    	}
+    }
 
     // insert code here...
     cout << "Hello, World!\n";
