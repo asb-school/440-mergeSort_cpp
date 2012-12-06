@@ -107,24 +107,17 @@ void Sorter::run()
     }
     
     // Sort working item collection
-    sort(this->workingItemCollection);
+    sort(this->workingItemCollection.begin(), this->workingItemCollection.end());
 }
 
-// Generate random numbers
-void generateIntegers(int givenCollectionSize)
-{
-    
-}
 
 
 int main(int argc, const char * argv[])
 {
     // Variables
-    vector<int> masterItemCollection;
-
     int collectionSize = 0;
     int numberOfThreads = 0;
-    int lowerstNumber = 0;
+    int lowestNumber = 0;
     bool notSorted = true;
     
     vector<int> sortedItemList;
@@ -142,37 +135,74 @@ int main(int argc, const char * argv[])
     	cout << "USAGE: arg1: collection size, arg2: number of threads\n";
 	return 0;
     }
+    
+    // Create a vector with items
+    vector<int> masterItemCollection(collectionSize);
 
     // Generate random numbers in the master item collection
-    generateIntegers(collectionSize);
+    generate(masterItemCollection.begin(), masterItemCollection.end(), rand);
+	
+	// Debug
+	cout << "Unsorted list\n";
+	
+	for (auto iterator = masterItemCollection.begin(); iterator != masterItemCollection.end(); iterator++)
+	{
+		cout << *iterator << endl;
+	}
 
-    // Debug
-    cout << "Unsorted list: \n";
-
-    for (masterItemCollection.begin(), masterItemCollection.end())
-    {
-        cout << "lala";
-    }
-    
+  
     
     // THREADING
+
+    // Pointer to list to increment
+    Sorter *listToIncrement = NULL;
 
     // Merge individual items into a giant sorted list
     while (notSorted)
     {
     	// Reset lowest number
-    	lowerstNumber = 9999;
+    	lowestNumber = 9999;
 
     	// For each list
-    	for (vector<Sorter>::iterator currentSorter = sorterList.begin(); currentSorter < sorterList.end(); currentSorter++)
+    	for (auto iterator = sorterList.begin(); iterator != sorterList.end(); iterator++)
     	{
-    		// Is item from list a lower number than the current lowest number
-    		if (currentSorter.getItem() < lowerstNumber)
+            // Get current sorter
+            Sorter currentSorter = *iterator;
+            
+			// Is item from list a lower number than the current lowest number
+    		if (currentSorter.getItem() < lowestNumber)
     		{
-    			lowerstNumber = currentSorter.getItem();
+                // Set the new value as lowest number
+    			lowestNumber = currentSorter.getItem();
+                
+                // Save reference to current item that we need to add number to
+                listToIncrement = &currentSorter;
     		}
     	}
+		
+		// Save lowest number
+		if (lowestNumber != 9999)
+		{
+			// Add lowest number to sorted item list
+			sortedItemList.push_back(lowestNumber);
+			
+			// Increment list index
+			listToIncrement->incrementIndex();
+		}
+		else
+		{
+			notSorted = false;
+		}
     }
+	
+	
+	// Debug
+	cout << "Sorted list\n";
+	
+	for (auto iterator = sortedItemList.begin(); iterator != sortedItemList.end(); iterator++)
+	{
+		cout << *iterator << endl;
+	}
 
     // insert code here...
     cout << "Hello, World!\n";
