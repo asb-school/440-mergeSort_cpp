@@ -19,28 +19,28 @@ class Sorter
 {
     public:
     
-    // Constructor
-    Sorter(vector<int> *givenMasterItemCollection, int givenNumberOfItems, int givenNumberOfThreads, int givenThreadId);
+		// Constructor
+		Sorter(vector<int> *givenMasterItemCollection, int givenNumberOfItems, int givenNumberOfThreads, int givenThreadId);
 
-    int getItem();
-    void incrementIndex();
-    void run();
+		int getItem();
+		void incrementIndex();
+		void run();
         
     private:
     
-    vector<int> workingItemCollection;
-    vector<int> *masterItemCollection;
-    
-    int numberOfItems;
-    int numberOfThreads;
-    int threadId;
-    
-    int beginningPosition;
-    int endingPosition;
-    
-    int indexLocation;
-    
-    void calculatePositions();
+		vector<int> workingItemCollection;
+		vector<int> *masterItemCollection;
+		
+		int numberOfItems;
+		int numberOfThreads;
+		int threadId;
+		
+		int beginningPosition;
+		int endingPosition;
+		
+		int indexLocation;
+		
+		void calculatePositions();
 };
 
 
@@ -153,6 +153,15 @@ int main(int argc, const char * argv[])
   
     
     // THREADING
+	vector<pthread_t> threads(numberOfThreads);
+	pthread_attr_t pattr;
+
+	pthread_attr_init(&pattr);
+	
+	
+	
+	
+	
 
     // Pointer to list to increment
     Sorter *listToIncrement = NULL;
