@@ -14,6 +14,7 @@
 #include <vector>
 #include <pthread.h>
 #include <semaphore.h>
+#include <stdexcept>
 
 using namespace std;
 
@@ -27,6 +28,7 @@ public:
 	
 	// Functions
 	int getItem();
+	int getId();
 	void incrementIndex();
 	bool startInternalThread();
 	void waitForInternalThreadToExit();

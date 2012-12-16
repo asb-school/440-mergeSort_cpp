@@ -43,6 +43,11 @@ void Sorter::calculatePositions()
 }
 
 
+int Sorter::getId()
+{
+	return this->threadId;
+}
+
 // Get sorted items
 int Sorter::getItem()
 {
@@ -51,7 +56,7 @@ int Sorter::getItem()
     {
         return this->workingItemCollection.at(this->indexLocation);
     }
-    catch (int e)
+    catch (out_of_range& oor)
     {
         return 9999;
     }
@@ -96,7 +101,7 @@ void* Sorter::internalThreadFunction(void *givenSorterPointer)
 // This is the bread and butter of the whole operation
 void Sorter::run()
 {
-	cout << "Hello, I am thread id: " << this->threadId << endl;
+	
 	
     // Calculate beginning and ending positions
     this->calculatePositions();
@@ -110,5 +115,6 @@ void Sorter::run()
     
     // Sort working item collection
     sort(this->workingItemCollection.begin(), this->workingItemCollection.end());
+
 }
 

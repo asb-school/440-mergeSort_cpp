@@ -15,6 +15,11 @@
 
 using namespace std;
 
+// Generate a random number between 0 and 1000
+int randomNumber()
+{
+	return (rand()%1000);
+}
 
 int main(int argc, const char * argv[])
 {
@@ -44,7 +49,7 @@ int main(int argc, const char * argv[])
     vector<int> masterItemCollection(collectionSize);
 
     // Generate random numbers in the master item collection
-    generate(masterItemCollection.begin(), masterItemCollection.end(), rand);
+    generate(masterItemCollection.begin(), masterItemCollection.end(), randomNumber);
 	
 	// Debug
 	cout << "Unsorted list\n";
@@ -54,16 +59,43 @@ int main(int argc, const char * argv[])
 		cout << *iterator << endl;
 	}
 
-  
+	// Create sorter objects
+	for (int iteratorIndex = 0; iteratorIndex < numberOfThreads; iteratorIndex++)
+	{
+		// Create new sorter
+		Sorter currentSorter(&masterItemCollection, collectionSize, numberOfThreads, iteratorIndex);
+		
+		// Keep track of this sorter
+		sorterList.push_back(currentSorter);
+	}
     
-    // THREADING
+	
+	// Create threads
+	for (auto iterator = sorterList.begin(); iterator != sorterList.end(); iterator++)
+	{
+		// Get a pointer to the current sorter object
+		Sorter *currentSorter = &(*iterator);
+		
+		// Create thread
+		currentSorter->startInternalThread();
+	}
+	
+	// Wait for threads to finish
+	for (auto iterator = sorterList.begin(); iterator != sorterList.end(); iterator++)
+	{
+		// Get a pointer to the current sorter object
+		Sorter *currentSorter = &(*iterator);
+			
+		// Wait for thread to finish
+		currentSorter->waitForInternalThreadToExit();
+	}
 		
 
     // Pointer to list to increment
     Sorter *listToIncrement = NULL;
 
     // Merge individual items into a giant sorted list
-    while (notSorted)
+    while (notSorted == true)
     {
     	// Reset lowest number
     	lowestNumber = 9999;
@@ -72,16 +104,16 @@ int main(int argc, const char * argv[])
     	for (auto iterator = sorterList.begin(); iterator != sorterList.end(); iterator++)
     	{
             // Get current sorter
-            Sorter currentSorter = *iterator;
+            Sorter *currentSorter = &(*iterator);
             
 			// Is item from list a lower number than the current lowest number
-    		if (currentSorter.getItem() < lowestNumber)
+    		if (currentSorter->getItem() < lowestNumber)
     		{
                 // Set the new value as lowest number
-    			lowestNumber = currentSorter.getItem();
+    			lowestNumber = currentSorter->getItem();
                 
                 // Save reference to current item that we need to add number to
-                listToIncrement = &currentSorter;
+                listToIncrement = &(*currentSorter);
     		}
     	}
 		
@@ -109,8 +141,6 @@ int main(int argc, const char * argv[])
 		cout << *iterator << endl;
 	}
 
-    // insert code here...
-    cout << "Hello, World!\n";
     return 0;
 }
 
