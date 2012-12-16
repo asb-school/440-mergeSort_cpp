@@ -11,105 +11,9 @@
 #include <vector>
 #include <pthread.h>
 #include <semaphore.h>
+#include "Sorter.h"
 
 using namespace std;
-
-
-class Sorter
-{
-    public:
-    
-		// Constructor
-		Sorter(vector<int> *givenMasterItemCollection, int givenNumberOfItems, int givenNumberOfThreads, int givenThreadId);
-
-		int getItem();
-		void incrementIndex();
-		void run();
-        
-    private:
-    
-		vector<int> workingItemCollection;
-		vector<int> *masterItemCollection;
-		
-		int numberOfItems;
-		int numberOfThreads;
-		int threadId;
-		
-		int beginningPosition;
-		int endingPosition;
-		
-		int indexLocation;
-		
-		void calculatePositions();
-};
-
-
-// Constructor
-Sorter::Sorter(vector<int> *givenMasterItemCollection, int givenNumberOfItems, int givenNumberOfThreads, int givenThreadId)
-{
-    // Set given variables
-    this->masterItemCollection = givenMasterItemCollection;
-    this->numberOfItems = givenNumberOfItems;
-    this->numberOfThreads = givenNumberOfThreads;
-    this->threadId = givenThreadId;
-    
-    // Initialize variables
-    this->indexLocation = 0;
-}
-
-// Calculate positions
-void Sorter::calculatePositions()
-{
-    // Beginning position
-    this->beginningPosition = (this->numberOfItems / this->numberOfThreads) * this->threadId;
-    
-    // Ending position
-    this->endingPosition = this->beginningPosition + (this->numberOfItems / this->numberOfThreads) - 1;
-    
-    // The last thread gets the slack
-    if ((this->threadId == this->numberOfThreads - 1) && (this->endingPosition < this->numberOfItems - 1))
-    {
-        this->endingPosition = this->numberOfItems - 1;
-    }
-}
-
-// Get sorted items
-int Sorter::getItem()
-{
-    // Get an item at the given index location
-    try
-    {
-        return this->workingItemCollection.at(this->indexLocation);
-    }
-    catch (int e)
-    {
-        return 9999;
-    }
-    
-}
-
-// Set index location
-void Sorter::incrementIndex()
-{
-    this->indexLocation++;
-}
-
-void Sorter::run()
-{
-    // Calculate beginning and ending positions
-    this->calculatePositions();
-    
-    // For each - using beginning and ending positions
-    for (int iteratorIndex = this->beginningPosition; iteratorIndex <= this->endingPosition; iteratorIndex++)
-    {
-        // Copy to temporary local array
-        this->workingItemCollection.push_back(this->masterItemCollection->at(iteratorIndex));
-    }
-    
-    // Sort working item collection
-    sort(this->workingItemCollection.begin(), this->workingItemCollection.end());
-}
-
 
 
 int main(int argc, const char * argv[])
@@ -153,15 +57,7 @@ int main(int argc, const char * argv[])
   
     
     // THREADING
-	vector<pthread_t> threads(numberOfThreads);
-	pthread_attr_t pattr;
-
-	pthread_attr_init(&pattr);
-	
-	
-	
-	
-	
+		
 
     // Pointer to list to increment
     Sorter *listToIncrement = NULL;
